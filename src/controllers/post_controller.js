@@ -7,15 +7,24 @@ export const createPost = async (postFields) => {
   // return post
   const post = new Post();
   post.title = postFields.title;
-  post.tags = postFields.tags;
-  //   const arr = [];
-  //   let currWord = '';
-  //   for (const letter of postFields.tags) {
-  //     if (letter == ' ') {
-  //       arr.push(currWord);
-  //       currWord = '';
-  //     }
-  //   }
+
+  //   post.tags = postFields.tags;
+
+  const arr = [];
+  let currWord = '';
+  for (let i = 0; i < postFields.tags.length; i += 1) {
+    const letter = postFields.tags[i];
+    if (letter == ' ' || i == postFields.tags.length - 1) {
+      if (i == postFields.tags.length - 1) {
+        currWord += letter;
+      }
+      arr.push(currWord);
+      currWord = '';
+    } else {
+      currWord += letter;
+    }
+  }
+  post.tags = arr;
 
   post.content = postFields.content;
   post.coverUrl = postFields.coverUrl;
@@ -63,7 +72,17 @@ export const updatePost = async (id, postFields) => {
       post.title = postFields.title;
     }
     if (postFields.tags != null) {
-      post.tags = postFields.tags;
+      const arr = [];
+      let currWord = '';
+      for (const letter of postFields.tags) {
+        if (letter == ' ') {
+          arr.push(currWord);
+          currWord = '';
+        } else {
+          currWord += letter;
+        }
+      }
+      post.tags = arr;
     }
     if (postFields.content != null) {
       post.content = postFields.content;
