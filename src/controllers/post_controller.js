@@ -3,31 +3,11 @@
 import Post from '../models/post_model';
 
 export const createPost = async (postFields) => {
-  // await creating a post
-  // return post
   const post = new Post();
   post.title = postFields.title;
-
-  //   post.tags = postFields.tags;
-
-  const arr = [];
-  let currWord = '';
-  for (let i = 0; i < postFields.tags.length; i += 1) {
-    const letter = postFields.tags[i];
-    if (letter == ' ' || i == postFields.tags.length - 1) {
-      if (i == postFields.tags.length - 1) {
-        currWord += letter;
-      }
-      arr.push(currWord);
-      currWord = '';
-    } else {
-      currWord += letter;
-    }
-  }
-  post.tags = arr;
-
   post.content = postFields.content;
-  post.coverUrl = postFields.coverUrl;
+  post.author = postFields.author;
+
   try {
     const savedpost = await post.save();
     return savedpost;
@@ -36,8 +16,6 @@ export const createPost = async (postFields) => {
   }
 };
 export const getPosts = async () => {
-  // await finding posts
-  // return posts
   try {
     const posts = await Post.find({});
     return posts;
@@ -55,8 +33,6 @@ export const getPost = async (id) => {
   }
 };
 export const deletePost = async (id) => {
-  // await deleting a post
-  // return confirmation
   try {
     return await Post.deleteOne({ _id: id });
   } catch (error) {
@@ -64,31 +40,16 @@ export const deletePost = async (id) => {
   }
 };
 export const updatePost = async (id, postFields) => {
-  // await updating a post by id
-  // return *updated* post
   try {
     const post = await Post.findById(id);
     if (postFields.title != null) {
       post.title = postFields.title;
     }
-    if (postFields.tags != null) {
-      const arr = [];
-      let currWord = '';
-      for (const letter of postFields.tags) {
-        if (letter == ' ') {
-          arr.push(currWord);
-          currWord = '';
-        } else {
-          currWord += letter;
-        }
-      }
-      post.tags = arr;
-    }
     if (postFields.content != null) {
       post.content = postFields.content;
     }
-    if (postFields.coverUrl != null) {
-      post.coverUrl = postFields.coverUrl;
+    if (postFields.author != null) {
+      post.author = postFields.author;
     }
     post.save();
     return post;
